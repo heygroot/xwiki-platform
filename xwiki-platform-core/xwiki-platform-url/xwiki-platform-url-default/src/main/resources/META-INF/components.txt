@@ -1,0 +1,2 @@
+org.xwiki.url.internal.XWikiServerClassListener
+org.xwiki.url.internal.DefaultURLSecurityManager

@@ -21,6 +21,7 @@ package com.xpn.xwiki.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xwiki.url.URLSecurityManager;
 
 public class XWikiServletResponse implements XWikiResponse
 {
@@ -66,7 +68,19 @@ public class XWikiServletResponse implements XWikiResponse
             LOGGER.warn("Possible HTTP Response Splitting attack, attempting to redirect to [{}]", redirect);
             return;
         }
+        if (redirect.matches("[a-z0-9]+://.*")) {
+            // Full URL, check that the hostname matches
+            if (!getURLSecurityManager().isDomainTrusted(new URL(redirect))) {
+                LOGGER.warn("Possible phishing attack, attempting to redirect to [{}]", redirect);
+                return;
+            }
+        }
         this.response.sendRedirect(redirect);
+    }
+
+    private URLSecurityManager getURLSecurityManager()
+    {
+        return Utils.getComponent(URLSecurityManager.class);
     }
 
     @Override

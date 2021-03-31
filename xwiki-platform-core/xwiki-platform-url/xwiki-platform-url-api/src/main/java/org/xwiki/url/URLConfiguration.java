@@ -19,7 +19,11 @@
  */
 package org.xwiki.url;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.xwiki.component.annotation.Role;
+import org.xwiki.stability.Unstable;
 
 /**
  * Configuration options for the URL module.
@@ -46,5 +50,16 @@ public interface URLConfiguration
     default boolean useResourceLastModificationDate()
     {
         return true;
+    }
+
+    /**
+     * @return the list of trusted domains that can be used in the wiki.
+     * @since 13.3RC1
+     * @since 12.10.7
+     */
+    @Unstable
+    default List<String> getTrustedDomains()
+    {
+        return Collections.emptyList();
     }
 }
